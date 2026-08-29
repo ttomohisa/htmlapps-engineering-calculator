@@ -13,3 +13,4 @@ Initial public release.
 - Added smartphone Calculate / Find / Favorites page tabs and desktop category workbench navigation.
 - Added standalone readable and self-extracting single-HTML builds with zero third-party runtime dependencies and `connect-src 'none'`.
 - Added release documentation for formulas, limitations, privacy, architecture, GitHub Pages deployment, and contribution/security guidance.
+- Fixed repository validation so it checks Engineering Calculator behavior instead of requiring the base template's unused text-output filename field.

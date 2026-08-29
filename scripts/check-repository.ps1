@@ -89,8 +89,21 @@ foreach ($requiredDependencyId in @("qrcode-generator", "jsqr")) {
 $sourceText = Get-Content -Raw -Encoding UTF8 (Join-Path $Root "src\index.template.html")
 if (-not $sourceText.Contains("__EMBEDDED_ASSET_BUNDLE_JSON__")) { throw "src\index.template.html must embed the asset bundle JSON directly." }
 if ($sourceText.Contains("__EMBEDDED_ASSET_BUNDLE_BASE64__")) { throw "Legacy double-Base64 asset bundle placeholder must not return." }
-foreach ($token in @("bytesAsync", "blobUrlAsync", "outputFilename", "window.AppToast")) {
-  if (-not $sourceText.Contains($token)) { throw "src\index.template.html is missing required template behavior marker: $token" }
+# Keep the shared single-HTML runtime contract, then verify behavior that actually
+# belongs to Engineering Calculator. The base template's `outputFilename` marker
+# is intentionally not required because this app does not have a file-export
+# filename field; CSV is copied to the clipboard instead.
+$sourceBehaviorMarkers = @(
+  "bytesAsync",
+  "blobUrlAsync",
+  "showToast",
+  "copyShareLink",
+  "calculateSweep",
+  "applyBoltPreset",
+  "applyFitPreset"
+)
+foreach ($token in $sourceBehaviorMarkers) {
+  if (-not $sourceText.Contains($token)) { throw "src\index.template.html is missing required application behavior marker: $token" }
 }
 
 $builderText = Get-Content -Raw -Encoding UTF8 (Join-Path $Root "build-standalone.ps1")
