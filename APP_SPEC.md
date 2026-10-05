@@ -12,7 +12,7 @@
 
 Engineering work repeatedly requires small calculations such as shaft torque, beam deflection, Reynolds number, gear ratio, three-phase power, or unit conversion. These are often scattered across old spreadsheets, desktop utilities, handbooks, and web pages. The app provides a searchable, consistent workbench that runs locally without sending entered values outside the browser.
 
-A successful session is: search or browse → choose a calculation → enter values with units → inspect results and formula → copy the result or conditions.
+A successful session is: search or browse → choose a calculation → enter values with units → inspect results and formula → copy the result or conditions, or download a calculation note.
 
 ## 3. v1.0.0 scope
 
@@ -36,6 +36,7 @@ A successful session is: search or browse → choose a calculation → enter val
 - Bidirectional flat-wall Fourier conduction plus composite-wall and cylindrical-wall conduction.
 - Explicit condition-sharing links that encode only the selected calculator state, including sweep settings, in the URL fragment.
 - Copy a single result or the full calculation conditions.
+- Download the current valid calculation as a UTF-8 plain-text `.txt` note with an editable filename, active inputs/units, exactly displayed results, display precision, localized formula/full assumptions, and the existing engineering caution. No sweep attachment, new calculation, import, or history is added.
 - Safe localized quick expression calculator without `eval()`.
 - User-selectable automatic / 3 / 4 / 6 significant-digit display formatting.
 - Browser Back/Forward navigation across home, categories, and calculators.
@@ -49,14 +50,16 @@ A successful session is: search or browse → choose a calculation → enter val
 4. Enter values and choose units; valid results update immediately.
 5. Change result units as needed.
 6. Optionally open the parameter-sweep panel, use the default ±20% range or another range preset/manual range, choose an output, and inspect the graph or copy the sampled CSV.
-7. Inspect the formula/assumptions and copy a result or all conditions.
+7. Inspect the formula/assumptions and copy a result or all conditions, or edit the calculation-note filename and download the current note.
 8. Favorite calculators for repeated use; recently used calculators appear automatically.
 
 ## 5. Data and privacy
 
 - No runtime network request, analytics, telemetry, account, or server-side storage.
 - Entered values, favorites, history, and language preference remain in browser storage.
-- Clipboard write occurs only after a user action.
+- Clipboard write and calculation-note file download occur only after a user action. Downloaded notes contain the current inputs and results; share the file only with intended recipients.
+- Filename drafts are session-only per calculator, survive redraw and calculator switching, and are not stored or included in condition links. The extension is always `.txt`; unsafe names are sanitized with a nonempty default.
+- Download feedback means initiation only. The browser controls completion and destination; temporary anchors and Blob URLs are released.
 - Normal navigation stores only the selected calculator ID in the URL hash.
 - When the user explicitly chooses condition sharing, the copied URL fragment contains the selected calculator inputs, units, output units, material/helper metadata, and parameter-sweep settings. No server is involved.
 - Anyone who receives a condition-sharing URL can inspect the encoded calculation values, so the UI discloses this before/alongside sharing.
@@ -78,8 +81,9 @@ A successful session is: search or browse → choose a calculation → enter val
 - SVG icons only for primary interface iconography.
 - Visible focus, labels, keyboard access, sufficient contrast, `aria-live` result status, reduced-motion support, keyboard-first search, and browser history navigation.
 - Invalid or impossible values show inline messages without modal interruption. Blank/whitespace numeric fields are invalid, not zero; an explicitly entered zero or negative value remains valid where the formula permits it. Hidden solve-target fields are not required. Non-finite results are unavailable.
-- Result copy, condition copy/share, and sweeps are available only for the current valid calculation. They recover immediately after correction, including after reload with invalid saved inputs, without replacing the edited numeric input.
+- Result copy, condition copy/share, calculation-note download, and sweeps are available only for the current valid calculation. They recover immediately after correction, including after reload with invalid saved inputs, without replacing the edited numeric input.
 - Manual sweep bounds remain exactly as entered, including intermediate blank/equal values. These invalid bounds show an error and suppress the graph and CSV; initialization only supplies missing bounds, and explicit presets can replace them.
+- Clipboard fallback failures (including exceptions) remove temporary textareas and show localized failure feedback. Retrying remains possible; fallback restores the still-connected control focused immediately before fallback without reverting newer user focus.
 - Resetting a calculator is reversible with the canonical Toast + Undo pattern.
 
 ## 8. Browser target
@@ -109,6 +113,10 @@ Current stable Chromium, Firefox, and Safari on desktop and smartphone. Direct `
 - Mobile navigation has exactly three concise destinations and only one active mobile page at a time.
 - Saved input restoration is visibly disclosed on first calculator open per page session when prior local state exists.
 - H7/g6 helper values and M3–M24 bolt presets match their documented reference checks.
+- Japanese/English notes include every displayed numeric or descriptive result and full existing formula/assumption/caution text for all 80 calculators. Selected output units and auto/3/4/6 precision match the result display exactly. Hidden solve-target inputs are omitted.
+- Blank/non-finite/overflow states and detached old download actions produce no file; correction restores the download without replacing the active numeric input. Repeat downloads use the current state.
+- Edited Unicode filenames survive redraw, settings changes, and calculator switching, normalize repeated `.txt` suffixes, and never leak into persisted/share state. Failed download initiation cleans temporary resources and remains retryable.
+- Modern clipboard success, denied/absent API, fallback success/false/throw, and every copy action report the correct outcome without leaked nodes or unhandled rejections.
 - Help content describes the actual engineering workflow, privacy boundary, and calculation limitations.
 
 ## 11. Initial release milestone

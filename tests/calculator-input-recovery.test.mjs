@@ -1,44 +1,7 @@
-import fs from 'node:fs';
-import vm from 'node:vm';
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { harness } from './helpers/app-harness.mjs';
 
-const source = fs.readFileSync(process.env.APP_HTML || new URL('../src/index.template.html', import.meta.url), 'utf8');
-const start = source.indexOf('  const $=s=>document.querySelector(s);');
-const end = source.indexOf("  $('#languageButton').addEventListener", start);
-assert.ok(start > 0 && end > start, 'Application runtime boundaries must exist');
-
-// Minimal DOM boundary for the real workbench renderer and event handlers.
-// Browser QA additionally verifies native number inputs, clipboard, focus and layout.
-function harness(storage = new Map(), language = 'en') {
-  let document;
-  const decode = s => s.replace(/&(?:amp|lt|gt|quot|#39);/g, x => ({'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'"})[x]);
-  class Element {
-    constructor(tag, attrs = {}) { this.tagName = tag.toUpperCase(); this.attrs = attrs; this.children = []; this.listeners = {}; this.style = {}; this.value = attrs.value || ''; this.hidden = 'hidden' in attrs; this.disabled = 'disabled' in attrs; this.open = 'open' in attrs; this.dataset = Object.fromEntries(Object.entries(attrs).filter(([k]) => k.startsWith('data-')).map(([k,v]) => [k.slice(5).replace(/-([a-z])/g, (_,c) => c.toUpperCase()),v])); this.classList = {add: c => this.setAttribute('class', `${this.attrs.class || ''} ${c}`), remove: c => this.setAttribute('class', (this.attrs.class || '').split(' ').filter(v => v !== c).join(' ')), contains: c => (this.attrs.class || '').split(' ').includes(c), toggle: (c,on) => on ? this.classList.add(c) : this.classList.remove(c)}; if (attrs.style) for (const pair of attrs.style.split(';')) { const [k,v] = pair.split(':'); if(k && v) this.style[k.trim()] = v.trim(); } }
-    get id() { return this.attrs.id; }
-    setAttribute(k,v) { this.attrs[k] = String(v); }
-    getAttribute(k) { return this.attrs[k] ?? null; }
-    removeAttribute(k) { delete this.attrs[k]; }
-    addEventListener(type,fn) { (this.listeners[type] ||= []).push(fn); }
-    emit(type) { for (const fn of this.listeners[type] || []) fn({target:this,currentTarget:this}); }
-    click() { if (!this.disabled) { this.onclick?.({target:this,currentTarget:this}); this.emit('click'); } }
-    focus() { document.activeElement = this; }
-    get textContent() { return this.text || this.children.map(c => c.textContent).join(''); }
-    set textContent(v) { this.text = String(v); this.children = []; }
-    set innerHTML(html) { this.text = ''; this.children = []; const stack = [this]; for (const m of html.matchAll(/<\/?([\w-]+)([^>]*)>|([^<]+)/g)) { if (m[3]) { const n = new Element('text'); n.text = decode(m[3]); stack.at(-1).children.push(n); continue; } if (m[0].startsWith('</')) { if (stack.length > 1) stack.pop(); continue; } const attrs = {}; for (const a of m[2].matchAll(/([^\s=\/]+)(?:="([^"]*)"|='([^']*)'|=([^\s>]+))?/g)) attrs[a[1]] = decode(a[2] ?? a[3] ?? a[4] ?? ''); const n = new Element(m[1],attrs); stack.at(-1).children.push(n); if (!['input','br','hr','img','meta','link'].includes(m[1]) && !m[0].endsWith('/>')) stack.push(n); } for (const s of this.querySelectorAll('select')) s.value = (s.children.find(c => 'selected' in c.attrs) || s.children[0])?.attrs.value || ''; }
-    matches(selector) { const tag = selector.match(/^[\w-]+/); if (tag && this.tagName.toLowerCase() !== tag[0]) return false; for (const m of selector.matchAll(/([#.])([\w-]+)|\[([\w-]+)(?:="([^"]*)")?\]/g)) { if (m[1] === '#' && this.id !== m[2]) return false; if (m[1] === '.' && !this.classList.contains(m[2])) return false; if (m[3] && (!(m[3] in this.attrs) || (m[4] !== undefined && this.attrs[m[3]] !== m[4]))) return false; } return true; }
-    querySelectorAll(selector) { const found = []; const visit = n => { for (const c of n.children) { if (selector.split(',').some(s => c.matches(s.trim()))) found.push(c); visit(c); } }; visit(this); return found; }
-    querySelector(selector) { return this.querySelectorAll(selector)[0] || null; }
-  }
-  document = new Element('document');
-  document.innerHTML = '<main id="workbenchContent"></main><div id="appToast"><span id="appToastMessage"></span><button id="appToastAction"></button></div>';
-  const copied = [];
-  const context = {document,localStorage:{getItem:k=>storage.get(k) ?? null,setItem:(k,v)=>storage.set(k,v)},navigator:{language,clipboard:{writeText:async text=>copied.push(text)}},APP_CONFIG:{slug:'engineering-calculator'},BUILD_MANIFEST:{},CSS:{escape:s=>s},TextEncoder,TextDecoder,URL,atob,btoa,setTimeout:()=>0,clearTimeout(){},location:{href:'https://example.test/#calc=convert-temperature'}};
-  vm.createContext(context);
-  vm.runInContext(`(() => {\n${source.slice(start,end)}\nglobalThis.app={calculators,byId,defaultState,stateFor,persistState,renderWorkbench,recompute,ensureSweepConfig,calculateSweep,copySweepCsv,copyAll,copyShareLink,calculate(calc,state){thisCalc=calc;try{return calc.calc(state)}finally{thisCalc=null}}};\n})();`,context);
-  const app = context.app, node = selector => document.querySelector(selector);
-  return {app,document,node,storage,copied,open(id,values){ const calc=app.byId(id); if (values) { const s=app.stateFor(calc); Object.assign(s.values,values); app.persistState(calc,s); } return {calc,...app.renderWorkbench(calc)}; }, input(selector,value){ const n=node(selector); assert.ok(n,selector); n.focus(); n.value=value; n.emit('input'); return n; }};
-}
 function assertUnavailable(h) {
   assert.equal(h.node('#resultList').textContent,'');
   for (const id of ['copyAllButton','shareButton']) { const n=h.node('#'+id); assert.ok(!n || n.disabled, `${id} must be unavailable`); }
