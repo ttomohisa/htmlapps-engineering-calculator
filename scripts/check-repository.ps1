@@ -1,4 +1,4 @@
-param(
+﻿param(
   [switch]$ForceDownload
 )
 
@@ -90,14 +90,15 @@ $sourceText = Get-Content -Raw -Encoding UTF8 (Join-Path $Root "src\index.templa
 if (-not $sourceText.Contains("__EMBEDDED_ASSET_BUNDLE_JSON__")) { throw "src\index.template.html must embed the asset bundle JSON directly." }
 if ($sourceText.Contains("__EMBEDDED_ASSET_BUNDLE_BASE64__")) { throw "Legacy double-Base64 asset bundle placeholder must not return." }
 # Keep the shared single-HTML runtime contract, then verify behavior that actually
-# belongs to Engineering Calculator. The base template's `outputFilename` marker
-# is intentionally not required because this app does not have a file-export
-# filename field; CSV is copied to the clipboard instead.
+# belongs to Engineering Calculator, including its user-named calculation note.
+# Sweep CSV remains a clipboard action.
 $sourceBehaviorMarkers = @(
   "bytesAsync",
   "blobUrlAsync",
   "showToast",
   "copyShareLink",
+  "noteFilename",
+  "downloadCalculationNote",
   "calculateSweep",
   "applyBoltPreset",
   "applyFitPreset"
@@ -172,15 +173,16 @@ $buildArguments = @{}
 if ($ForceDownload) { $buildArguments.ForceDownload = $true }
 & (Join-Path $Root "build-standalone.ps1") @buildArguments
 
-# Run the dependency-free behavioral regressions against both editable and built runtime.
+# Run every dependency-free regression against source, readable, and restored self-extract runtime.
 $nodeCommand = Get-Command node -ErrorAction SilentlyContinue
 if (-not $nodeCommand) { throw "Node.js 18+ is required for calculator regression tests." }
-$testPath = Join-Path $Root "tests/calculator-input-recovery.test.mjs"
+$testPaths = @(Get-ChildItem -Path (Join-Path $Root "tests/*.test.mjs") | ForEach-Object { $_.FullName })
+if ($testPaths.Count -eq 0) { throw "Calculator regression tests were not found." }
 $previousAppHtml = $env:APP_HTML
 try {
-  foreach ($runtimePath in @("src/index.template.html", "dist/index.html")) {
+  foreach ($runtimePath in @("src/index.template.html", "dist/index.html", "dist/index.self-extract.html")) {
     $env:APP_HTML = Join-Path $Root $runtimePath
-    & $nodeCommand.Source --test $testPath
+    & $nodeCommand.Source --test @testPaths
     if ($LASTEXITCODE -ne 0) { throw "Calculator regressions failed for $runtimePath" }
   }
 } finally {

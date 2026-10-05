@@ -25,13 +25,14 @@ GitHub Pages delivers the initial HTML. After it loads, calculations, favorites,
 - **Use representative material presets** — Insert typical steel, stainless steel, aluminum alloy, copper, and brass properties into supported calculations.
 - **Check sections, fits, and bolts** — Includes section-property helpers, tolerance/fit analysis, M3–M24 metric-coarse bolt helpers, and an ISO 286 H7/g6 helper preset for 1–500 mm.
 - **Sweep a condition and graph the result** — Vary one numeric input over 11, 21, or 51 points using ±10%, ±20%, ±50%, 0.5–2×, or manual ranges and plot a selected result with a native SVG graph.
+- **Download a calculation note** — Save the current valid calculation as a UTF-8 `.txt` file: active inputs/units, displayed results, precision, full formula/assumptions, and engineering caution. Edit the filename before downloading.
 - **Copy results or sampled data** — Copy an individual result, full calculation conditions, or parameter-sweep data as CSV.
 - **Share conditions explicitly** — Copy a URL-fragment link containing the current calculator, values, and units without uploading them to a server. Normal category/calculator navigation also works with browser Back/Forward.
 - **Control display precision** — Choose automatic formatting or 3 / 4 / 6 significant digits without changing internal calculation precision.
 - **Make restored inputs visible** — When saved inputs are restored for the first time in a session, the app says so and offers an immediate reset to defaults.
 - **Private, single-HTML operation** — No third-party runtime dependency, Japanese/English UI, direct `file://` support, and no runtime network requests.
 
-Numeric fields must contain a valid number; a blank field is never treated as zero. Results, copying, sharing, and graphs resume automatically when invalid inputs are corrected, including after reload. Zero and negative values remain supported where the calculation allows them.
+Numeric fields must contain a valid number; a blank field is never treated as zero. Results, copying, sharing, downloads, and graphs resume automatically when invalid inputs are corrected, including after reload. Zero and negative values remain supported where the calculation allows them.
 
 Manual sweep start/end values are preserved while typing. Blank or equal bounds show a range error and suspend both graph and CSV until corrected; selecting a preset explicitly replaces the range.
 
@@ -67,6 +68,14 @@ Python, Node.js, and a local web server are not required for the build.
 8. Open **Parameter sweep & graph** to vary one numeric input over a range and inspect the trend. The default range is ±20% around the current value, with other presets and manual entry available. Sampled values can be copied as CSV.
 9. Use the header display settings to change significant digits. Browser Back/Forward returns to prior categories and calculators.
 
+### Calculation notes
+
+Edit **Calculation note filename** below the copy actions, then choose **Download calculation note**. The visible `.txt` extension is added once and unsafe filename characters are removed. Your filename draft stays with that calculator until the page is closed/reloaded, including when units, language, or display precision change. Each download uses the current valid calculation and exactly the displayed results; sweep data and condition links are not included.
+
+“Download started” means the browser received the request, not that a file was saved. Your browser controls the destination and completion. A note contains your calculation values, so share it only with intended recipients. Filename drafts are not saved in local storage or condition-sharing links.
+
+If clipboard access and its fallback both fail, the app shows **Could not copy** and removes its temporary text field. You can retry or download a note instead.
+
 ### Materials
 
 Material presets insert representative values only. They are intended to reduce repetitive typing, not to replace material certificates, applicable standards, or manufacturer data.
@@ -96,7 +105,7 @@ The workflow runs the repository checks, rebuilds the standalone HTML, verifies 
 
 ## Regression checks
 
-Node.js 18+ is required for `scripts/check-repository.ps1`, which runs dependency-free calculator regressions against source and the rebuilt readable HTML. To run only the behavioral tests: `node --test tests/calculator-input-recovery.test.mjs`. After rebuilding, refresh the root download with `Copy-Item dist/index.html engineering-calculator.html`; it must match the generated readable release byte-for-byte.
+Node.js 18+ is required for `scripts/check-repository.ps1`, which runs dependency-free calculator regressions against source, rebuilt readable HTML, and the restored self-extract payload. To run only the behavioral tests: `node --test tests/*.test.mjs`. Native clipboard/download, keyboard/focus, layout, and direct-file browser behavior still require browser QA. After rebuilding, refresh the root download with `Copy-Item dist/index.html engineering-calculator.html`; it must match the generated readable release byte-for-byte.
 
 ## Development and build layout
 
@@ -122,6 +131,7 @@ The generated HTML includes a Content Security Policy with `connect-src 'none'`.
 - Entered values are calculated in the browser.
 - Favorites, recent calculators, and saved input states are stored locally in browser storage.
 - Parameter sweeps and graphs are generated locally.
+- Calculation-note files are generated locally only after you request a download; they contain the inputs and results shown in the app.
 - No analytics or telemetry is included.
 - A condition-sharing link is created only when you explicitly request it. Its URL fragment contains the current values and units, so anyone receiving that link can inspect those conditions.
 

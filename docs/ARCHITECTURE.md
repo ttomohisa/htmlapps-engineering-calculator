@@ -90,6 +90,12 @@ A shared calculation outcome validates active numeric inputs and finite outputs 
 
 Sweep initialization fills absent bounds only. Manual blank/equal bounds are retained in state and validated by the sampling layer; invalid ranges clear the graph and CSV. Range edits update the graph region only, keeping the active input and its focus intact. The Node regression harness executes the application runtime with a small DOM boundary; browser QA covers native number input behavior and clipboard/layout.
 
+## Calculation-note output
+
+Calculation notes reuse the current `calculationOutcome`, common input-condition labels, and `displayResult`; no parallel numeric formatter or calculator is introduced. The note is assembled at click time, and detached download controls cannot export an old render. A per-calculator session-only filename map is separate from persisted calculator metadata and the condition-sharing schema. Names are sanitized to a bounded UTF-8 filename ending in one `.txt` extension.
+
+Download URLs are kept only until the browser has had time to consume them (or until page exit), with immediate cleanup on initiation failure. Temporary anchors are always removed. Clipboard fallback protects selection/copy with cleanup and failure feedback, restoring the still-connected control focused just before fallback. The shared regression harness executes the actual source/readable/restored self-extract application runtime at stubbed browser boundaries; it does not claim native browser coverage.
+
 ## Runtime security boundary
 
 Engineering Calculator's Content Security Policy blocks fetch/XHR/WebSocket-style runtime connections with `connect-src 'none'`. It also blocks frames, objects, forms, and external base URLs. Inline CSS and JavaScript are allowed because the release is intentionally one HTML document. v1.0.0 has no runtime third-party asset and no intentional peer-to-peer connection.

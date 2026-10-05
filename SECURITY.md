@@ -24,6 +24,7 @@ Engineering Calculator is a static, single-HTML browser application with no back
 - No analytics, telemetry, remote fonts, runtime CDN, API request, WebSocket, or silent update check is used.
 - Entered calculation values, Favorites, Recent calculations, display settings, and saved calculator state remain in browser storage.
 - **Copy condition link** is an explicit user action. It encodes the selected calculator, values, and units in the URL fragment; anyone receiving that URL can read those conditions.
+- **Download calculation note** is an explicit local export of current inputs, displayed results, formula, and cautions. No file is uploaded. Download names are sanitized and remain session-only; temporary anchors and Blob URLs are released. Treat the downloaded file as containing the calculation data when sharing it.
 - The release contains no bundled third-party runtime library in v1.0.0. Future dependencies must be exact, embedded, licensed, and recorded in `dependencies.json` and `THIRD_PARTY_NOTICES.md`.
 - `dist/index.html` and `dist/index.self-extract.html` are generated artifacts and should be distributed through a trusted channel.
 

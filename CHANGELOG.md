@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add a user-named UTF-8 calculation-note download with current inputs, displayed results/precision, full localized formula/assumptions, and engineering caution; prevent invalid or detached stale exports and release temporary download resources.
+- Fix thrown clipboard fallback failures so every copy action reports failure, removes its temporary textarea, preserves current focus, and can be retried.
+- Exercise note downloads and clipboard recovery against source, readable, and restored self-extract runtimes without changing the 80 calculators or their numerical behavior.
+
 - Reject blank numeric inputs instead of silently calculating with zero; preserve explicit zero/negative values permitted by each formula.
 - Restore copy/share and sweep controls after correcting invalid saved inputs without replacing the active numeric field; suppress non-finite and stale results/exports.
 - Preserve manual sweep edits through validation and reload, with a visible error and no graph/CSV for blank or equal bounds.
