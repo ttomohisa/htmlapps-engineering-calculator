@@ -16,6 +16,10 @@ GitHub Pages から最初のHTMLを読み込んだ後、計算、お気に入り
 
 [![Engineering Calculator スクリーンショット](assets/screenshot.png)](https://ttomohisa.github.io/htmlapps-engineering-calculator/)
 
+数値の空欄は0として扱いません。無効な入力中は結果・コピー・共有・グラフを停止し、修正すると再読み込み後もその場で再開します。計算式が許す0や負数は入力できます。
+
+スイープの開始・終了は入力中に自動補正しません。空欄や同じ値の場合は範囲エラーを表示してグラフとCSVを停止します。異なる有効な数値へ修正するか、範囲プリセットを選び直してください。
+
 ## 主な機能
 
 - **80種類の技術計算をひとつに集約** — 機械基礎、回転・動力、ボルト、軸、梁、歯車、ばね、ベアリング、流体、熱、電気、公差・はめあい、単位換算に対応します。
@@ -144,3 +148,7 @@ GitHub Pages版では最初のHTML取得だけ通信が発生します。ネッ�
 Copyright © 2026 ttomohisa
 
 [MIT License](LICENSE) で公開しています。
+
+## 回帰テスト
+
+`scripts/check-repository.ps1` はNode.js 18以降を使用し、ソースとビルド済みHTMLの両方で依存パッケージ不要の計算機回帰テストを実行します。単独実行: `node --test tests/calculator-input-recovery.test.mjs`。ビルド後は `Copy-Item dist/index.html engineering-calculator.html` でルート配布ファイルを更新し、生成HTMLとバイト単位で一致させます。
