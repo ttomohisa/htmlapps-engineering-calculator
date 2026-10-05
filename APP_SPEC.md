@@ -77,7 +77,9 @@ A successful session is: search or browse → choose a calculation → enter val
 - Smartphone: true page tabs for Calculate / Find / Favorites; no long desktop sidebar stacked above the calculator.
 - SVG icons only for primary interface iconography.
 - Visible focus, labels, keyboard access, sufficient contrast, `aria-live` result status, reduced-motion support, keyboard-first search, and browser history navigation.
-- Invalid or impossible values show inline messages without modal interruption.
+- Invalid or impossible values show inline messages without modal interruption. Blank/whitespace numeric fields are invalid, not zero; an explicitly entered zero or negative value remains valid where the formula permits it. Hidden solve-target fields are not required. Non-finite results are unavailable.
+- Result copy, condition copy/share, and sweeps are available only for the current valid calculation. They recover immediately after correction, including after reload with invalid saved inputs, without replacing the edited numeric input.
+- Manual sweep bounds remain exactly as entered, including intermediate blank/equal values. These invalid bounds show an error and suppress the graph and CSV; initialization only supplies missing bounds, and explicit presets can replace them.
 - Resetting a calculator is reversible with the canonical Toast + Undo pattern.
 
 ## 8. Browser target
@@ -98,7 +100,9 @@ Current stable Chromium, Firefox, and Safari on desktop and smartphone. Direct `
 - CSP contains `connect-src 'none'`.
 - Exactly 80 registered calculator entries are searchable in the planned initial release.
 - Every registered calculator exposes the common parameter-sweep panel when its default state yields at least one numeric result.
-- Sweep controls retain focus while range values are edited, and the graph updates without replacing the active range input.
+- Sweep controls retain focus while range values are edited, and the graph updates without replacing the active range input. Equal/blank bounds remain unchanged through redraw/reload; corrected bounds drive both graph and CSV.
+- Temperature blank → 0 → negative → blank transitions never expose stale results; explicit 0°C gives 32°F and 273.15K.
+- Saved blank RPM → reload → 60 RPM with 1 kW restores torque (159.15494309189535 N·m), copy/share, and sweep actions. 1000 W yields the same result.
 - Every calculator can render, accept inputs, validate, calculate, and show a formula without a JavaScript exception.
 - Favorites, recent history, language, and per-calculator values survive reload when localStorage is available.
 - Search works with Japanese and English aliases, `Ctrl/Cmd + K`, `/`, arrow-key result selection, and Enter.

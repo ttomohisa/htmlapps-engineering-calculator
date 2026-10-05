@@ -84,6 +84,12 @@ Condition sharing is explicit and local: a compact JSON payload for one calculat
 
 Parameter sweeps are implemented as a common runtime layer over the calculator registry rather than as calculator-specific chart code. A shared range preset layer derives ±10%, ±20% (default), ±50%, or 0.5–2× bounds from the active input before falling back to manual start/end entry. The sweep layer clones the active calculator state, varies one raw input value in its currently selected unit, runs the existing calculator function for each sample, converts the selected numeric output into the currently selected result unit, and renders the points as inline SVG. It never mutates the live calculation inputs while sampling. Sweep settings live under the calculator state metadata and therefore persist locally and participate in explicit condition sharing.
 
+## Numeric validity and result recovery
+
+A shared calculation outcome validates active numeric inputs and finite outputs before initial rendering, recomputation, or condition export. Blank text is distinct from explicit zero. Solve-target fields remain exempt while hidden. Result-action and sweep containers exist even when a saved calculation is invalid, so recomputation can restore them without replacing input fields.
+
+Sweep initialization fills absent bounds only. Manual blank/equal bounds are retained in state and validated by the sampling layer; invalid ranges clear the graph and CSV. Range edits update the graph region only, keeping the active input and its focus intact. The Node regression harness executes the application runtime with a small DOM boundary; browser QA covers native number input behavior and clipboard/layout.
+
 ## Runtime security boundary
 
 Engineering Calculator's Content Security Policy blocks fetch/XHR/WebSocket-style runtime connections with `connect-src 'none'`. It also blocks frames, objects, forms, and external base URLs. Inline CSS and JavaScript are allowed because the release is intentionally one HTML document. v1.0.0 has no runtime third-party asset and no intentional peer-to-peer connection.

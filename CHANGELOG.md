@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Reject blank numeric inputs instead of silently calculating with zero; preserve explicit zero/negative values permitted by each formula.
+- Restore copy/share and sweep controls after correcting invalid saved inputs without replacing the active numeric field; suppress non-finite and stale results/exports.
+- Preserve manual sweep edits through validation and reload, with a visible error and no graph/CSV for blank or equal bounds.
+- Add dependency-free regressions across all 80 calculators and run them against source and generated HTML in the repository check.
+
 ## 1.0.0
 
 Initial public release.

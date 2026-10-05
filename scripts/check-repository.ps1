@@ -172,4 +172,19 @@ $buildArguments = @{}
 if ($ForceDownload) { $buildArguments.ForceDownload = $true }
 & (Join-Path $Root "build-standalone.ps1") @buildArguments
 
+# Run the dependency-free behavioral regressions against both editable and built runtime.
+$nodeCommand = Get-Command node -ErrorAction SilentlyContinue
+if (-not $nodeCommand) { throw "Node.js 18+ is required for calculator regression tests." }
+$testPath = Join-Path $Root "tests/calculator-input-recovery.test.mjs"
+$previousAppHtml = $env:APP_HTML
+try {
+  foreach ($runtimePath in @("src/index.template.html", "dist/index.html")) {
+    $env:APP_HTML = Join-Path $Root $runtimePath
+    & $nodeCommand.Source --test $testPath
+    if ($LASTEXITCODE -ne 0) { throw "Calculator regressions failed for $runtimePath" }
+  }
+} finally {
+  $env:APP_HTML = $previousAppHtml
+}
+
 Write-Host "[OK] Repository check passed." -ForegroundColor Green

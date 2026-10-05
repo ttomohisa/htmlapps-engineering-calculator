@@ -31,6 +31,10 @@ GitHub Pages delivers the initial HTML. After it loads, calculations, favorites,
 - **Make restored inputs visible** — When saved inputs are restored for the first time in a session, the app says so and offers an immediate reset to defaults.
 - **Private, single-HTML operation** — No third-party runtime dependency, Japanese/English UI, direct `file://` support, and no runtime network requests.
 
+Numeric fields must contain a valid number; a blank field is never treated as zero. Results, copying, sharing, and graphs resume automatically when invalid inputs are corrected, including after reload. Zero and negative values remain supported where the calculation allows them.
+
+Manual sweep start/end values are preserved while typing. Blank or equal bounds show a range error and suspend both graph and CSV until corrected; selecting a preset explicitly replaces the range.
+
 ## Quick start
 
 ### Use the web demo
@@ -89,6 +93,10 @@ The repository includes a workflow that builds the standalone HTML and deploys `
 4. After a successful deployment, the demo is available at `https://ttomohisa.github.io/htmlapps-engineering-calculator/`.
 
 The workflow runs the repository checks, rebuilds the standalone HTML, verifies the generated artifacts, and publishes the result.
+
+## Regression checks
+
+Node.js 18+ is required for `scripts/check-repository.ps1`, which runs dependency-free calculator regressions against source and the rebuilt readable HTML. To run only the behavioral tests: `node --test tests/calculator-input-recovery.test.mjs`. After rebuilding, refresh the root download with `Copy-Item dist/index.html engineering-calculator.html`; it must match the generated readable release byte-for-byte.
 
 ## Development and build layout
 
