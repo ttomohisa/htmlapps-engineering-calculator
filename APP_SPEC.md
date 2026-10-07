@@ -3,7 +3,7 @@
 ## 1. Product identity
 
 - **Name:** Engineering Calculator
-- **Version:** 1.0.0
+- **Version:** 1.0.1
 - **Purpose:** Mechanical design and manufacturing calculations that are too small to justify opening a spreadsheet, gathered into one fast local browser workbench.
 - **Primary users:** Mechanical designers, manufacturing engineers, technicians, students, researchers, and anyone doing quick engineering checks.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
@@ -84,6 +84,8 @@ A successful session is: search or browse → choose a calculation → enter val
 - Result copy, condition copy/share, calculation-note download, and sweeps are available only for the current valid calculation. They recover immediately after correction, including after reload with invalid saved inputs, without replacing the edited numeric input.
 - Manual sweep bounds remain exactly as entered, including intermediate blank/equal values. These invalid bounds show an error and suppress the graph and CSV; initialization only supplies missing bounds, and explicit presets can replace them.
 - Clipboard fallback failures (including exceptions) remove temporary textareas and show localized failure feedback. Retrying remains possible; fallback restores the still-connected control focused immediately before fallback without reverting newer user focus.
+- The header shows the target language as EN / JA, with localized title and accessible label (`英語に切り替え` / `Switch to Japanese`). Privacy and Help remain available in both languages.
+- Changing language preserves quick-expression input and refreshes its result/error text, including invalid-to-valid recovery.
 - Resetting a calculator is reversible with the canonical Toast + Undo pattern.
 
 ## 8. Browser target

@@ -56,6 +56,8 @@ Just [open the demo](https://ttomohisa.github.io/htmlapps-engineering-calculator
 
 Python, Node.js, and a local web server are not required for the build.
 
+Use the header EN / JA button to switch languages. The quick-expression input stays unchanged, and any expression error updates to the chosen language.
+
 ## Usage
 
 1. Search by calculation name, engineering term, or unit, or choose a category from the left sidebar on desktop / the Find tab on mobile. On desktop, `Ctrl / ⌘ + K` or `/` focuses search.

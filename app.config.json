@@ -3,7 +3,7 @@
   "name": "Engineering Calculator",
   "nameJa": "Engineering Calculator",
   "slug": "engineering-calculator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A local-first engineering calculator and parameter-sweep workbench for mechanical design, manufacturing, fluids, thermal and electrical work.",
   "descriptionJa": "機械設計・製造・流体・熱・電気でよく使う計算とパラメータスイープをひとつにまとめた、完全ローカル処理の技術計算ツールです。",
   "defaultLanguage": "auto",
