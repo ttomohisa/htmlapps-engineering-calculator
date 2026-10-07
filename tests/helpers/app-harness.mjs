@@ -21,6 +21,9 @@ export function harness(storage = new Map(), language = 'en', platform = {}) {
     remove() { if(this.parentNode) { this.parentNode.children=this.parentNode.children.filter(n=>n!==this); this.parentNode=null; } if(document.activeElement===this)document.activeElement=document.body; }
     get isConnected() { return this===document || !!this.parentNode?.isConnected; }
     select() { this.focus(); if(platform.selectThrows)throw new Error('Selection failed'); }
+    get options() { return this.children.filter(child => child.tagName === 'OPTION'); }
+    get title() { return this.getAttribute('title') || ''; }
+    set title(value) { this.setAttribute('title', value); }
     get id() { return this.attrs.id; }
     setAttribute(k,v) { this.attrs[k] = String(v); }
     getAttribute(k) { return this.attrs[k] ?? null; }
@@ -38,6 +41,8 @@ export function harness(storage = new Map(), language = 'en', platform = {}) {
   }
   document = new Element('document');
   document.innerHTML = '<main id="workbenchContent"></main><div id="appToast"><span id="appToastMessage"></span><button id="appToastAction"></button></div>';
+  if (platform.shell) document.innerHTML = source.slice(source.indexOf('<body>') + 6, source.indexOf('<script>', source.indexOf('<body>')));
+  document.documentElement = new Element('html');
   document.body=document;
   document.activeElement=document.body;
   document.createElement=tag=>new Element(tag);
@@ -45,9 +50,9 @@ export function harness(storage = new Map(), language = 'en', platform = {}) {
   const copied = [],downloads=[],urls=new Map(),revoked=[],timers=new Map(),events={};let nextTimer=0,nextUrl=0;
   class TestURL extends URL { static createObjectURL(blob) { if(platform.urlThrows)throw new Error('URL failed');const url='blob:test-'+(++nextUrl);urls.set(url,blob);return url; } static revokeObjectURL(url) { revoked.push(url);urls.delete(url); } }
   const clipboard={writeText: async text=>{ if(platform.writeText)return platform.writeText(text);if(platform.clipboardRejects)throw new Error('Clipboard denied');copied.push(text); }};
-  const context = {document,localStorage:{getItem:k=>storage.get(k) ?? null,setItem:(k,v)=>storage.set(k,v)},navigator:{language,clipboard:platform.clipboardAbsent?undefined:clipboard},APP_CONFIG:{slug:'engineering-calculator',name:'Engineering Calculator',version:'1.0.0'},BUILD_MANIFEST:{},CSS:{escape:s=>s},TextEncoder,TextDecoder,URL:TestURL,Blob,atob,btoa,setTimeout:(fn,delay)=>{const id=++nextTimer;timers.set(id,{fn,delay});return id;},clearTimeout:id=>timers.delete(id),addEventListener:(type,fn)=>(events[type]||=[]).push(fn),location:{href:'https://example.test/#calc=convert-temperature'}};
+  const context = {document,localStorage:{getItem:k=>storage.get(k) ?? null,setItem:(k,v)=>storage.set(k,v)},navigator:{language,clipboard:platform.clipboardAbsent?undefined:clipboard},APP_CONFIG:{slug:'engineering-calculator',name:'Engineering Calculator',nameJa:'Engineering Calculator',version:'1.0.0'},BUILD_MANIFEST:{},CSS:{escape:s=>s},TextEncoder,TextDecoder,URL:TestURL,Blob,atob,btoa,setTimeout:(fn,delay)=>{const id=++nextTimer;timers.set(id,{fn,delay});return id;},clearTimeout:id=>timers.delete(id),addEventListener:(type,fn)=>(events[type]||=[]).push(fn),location:{href:'https://example.test/#calc=convert-temperature'}};
   vm.createContext(context);
-  vm.runInContext(`(() => {\n${source.slice(start,end)}\nglobalThis.app={copyText,displayResult,sharePayload,label,tr,calculationOutcome,setLanguage(value){language=value},setPrecision(value){precisionSetting=value},calculators,byId,defaultState,stateFor,persistState,renderWorkbench,recompute,ensureSweepConfig,calculateSweep,copySweepCsv,copyAll,copyShareLink,calculate(calc,state){thisCalc=calc;try{return calc.calc(state)}finally{thisCalc=null}}};\n})();`,context);
+  vm.runInContext(`(() => {\n${source.slice(start,end)}\n${platform.shell ? source.slice(end, source.indexOf('const help=', end)) : ''}\nglobalThis.app={applyLanguage,updateQuick,copyText,displayResult,sharePayload,label,tr,calculationOutcome,setLanguage(value){language=value},setPrecision(value){precisionSetting=value},calculators,byId,defaultState,stateFor,persistState,renderWorkbench,recompute,ensureSweepConfig,calculateSweep,copySweepCsv,copyAll,copyShareLink,calculate(calc,state){thisCalc=calc;try{return calc.calc(state)}finally{thisCalc=null}}};\n})();`,context);
   const app = context.app, node = selector => document.querySelector(selector);
   return {app,document,node,storage,copied,downloads,urls,revoked,platform,flushTimers(){for(const [id,t] of [...timers]){timers.delete(id);t.fn()}},emitWindow(type){for(const fn of events[type]||[])fn()},open(id,values){ const calc=app.byId(id); if (values) { const s=app.stateFor(calc); Object.assign(s.values,values); app.persistState(calc,s); } return {calc,...app.renderWorkbench(calc)}; }, input(selector,value){ const n=node(selector); assert.ok(n,selector); n.focus(); n.value=value; n.emit('input'); return n; }};
 }

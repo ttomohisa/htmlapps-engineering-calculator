@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 - 2026-10-07
+
+- Standardize the header language targets to EN / JA with localized target-language tooltips and accessible labels.
+- Refresh quick-expression errors when switching language without changing the entered expression.
+
 ## Unreleased
 
 - Add a user-named UTF-8 calculation-note download with current inputs, displayed results/precision, full localized formula/assumptions, and engineering caution; prevent invalid or detached stale exports and release temporary download resources.
