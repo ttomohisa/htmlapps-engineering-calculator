@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.3 - 2026-10-09
+
+- Replace the header icon and favicon with the supplied rounded green SVG artwork, preserving the existing responsive icon dimensions.
+- Regenerate the standalone downloads and add exact icon-parity checks across source, readable, root-download, and self-extract artifacts.
+
 ## 1.0.2 - 2026-10-09
 
 - Add a representative English application screenshot for the app catalog and English README.
