@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2 - 2026-10-09
+
+- Add a representative English application screenshot for the app catalog and English README.
+
 ## 1.0.1 - 2026-10-07
 
 - Standardize the header language targets to EN / JA with localized target-language tooltips and accessible labels.
