@@ -3,7 +3,7 @@
 ## 1. Product identity
 
 - **Name:** Engineering Calculator
-- **Version:** 1.0.2
+- **Version:** 1.0.3
 - **Purpose:** Mechanical design and manufacturing calculations that are too small to justify opening a spreadsheet, gathered into one fast local browser workbench.
 - **Primary users:** Mechanical designers, manufacturing engineers, technicians, students, researchers, and anyone doing quick engineering checks.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
@@ -74,6 +74,8 @@ A successful session is: search or browse → choose a calculation → enter val
 - Material presets are representative broad-family values and are never presented as certified grade data.
 
 ## 7. UX and accessibility
+
+- The supplied 64×64 rounded green SVG in `assets/favicon.svg` is shared exactly by the header and embedded favicons in every generated release variant.
 
 - Light-only Browser Kitty visual language with accent `#16624F`.
 - Desktop: browse/sidebar + calculator workbench.
