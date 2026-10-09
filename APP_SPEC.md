@@ -3,7 +3,7 @@
 ## 1. Product identity
 
 - **Name:** Engineering Calculator
-- **Version:** 1.0.1
+- **Version:** 1.0.2
 - **Purpose:** Mechanical design and manufacturing calculations that are too small to justify opening a spreadsheet, gathered into one fast local browser workbench.
 - **Primary users:** Mechanical designers, manufacturing engineers, technicians, students, researchers, and anyone doing quick engineering checks.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
