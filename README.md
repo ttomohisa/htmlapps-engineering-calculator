@@ -14,7 +14,7 @@ A privacy-focused, single-HTML engineering calculator for common mechanical desi
 
 GitHub Pages delivers the initial HTML. After it loads, calculations, favorites, history, parameter sweeps, graphing, and CSV generation are processed locally in your browser. The app does not send entered values to a server during runtime.
 
-[![Engineering Calculator screenshot](assets/screenshot.png)](https://ttomohisa.github.io/htmlapps-engineering-calculator/)
+[![Engineering Calculator screenshot](assets/screenshot-en.png)](https://ttomohisa.github.io/htmlapps-engineering-calculator/)
 
 ## Features
 
