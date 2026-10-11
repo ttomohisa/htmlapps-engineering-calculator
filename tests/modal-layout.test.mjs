@@ -16,10 +16,10 @@ test('native modal state locks both document scroll containers', () => {
   }
 });
 
-test('Japanese and English Help explain modal background scrolling', () => {
+test('Japanese and English Help exclude modal implementation prose', () => {
   const help = html.match(/function renderHelp\(\)\{([\s\S]*?)\n  function buildInfoHtml/)[1];
-  assert.match(help, /ダイアログを開いている間は背景のスクロールを止め/);
-  assert.match(help, /While a dialog is open, background scrolling is locked/);
+  assert.doesNotMatch(help, /ダイアログを開いている間は背景のスクロールを止め/);
+  assert.doesNotMatch(help, /While a dialog is open, background scrolling is locked/);
 });
 
 test('existing shield and native Help/Settings dismissal wiring remain present', () => {
