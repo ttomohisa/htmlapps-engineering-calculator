@@ -37,3 +37,22 @@ test('quick expression error translates on toggles without changing the input, a
   input.value = ''; h.app.updateQuick(); h.node('#languageButton').click();
   assert.equal(h.node('#quickResult').textContent, '—');
 });
+
+test('precision option labels switch both ways without changing values or selection', () => {
+  const h = harness(new Map(), 'en', { shell: true });
+  h.app.setPrecision('4');
+  h.app.applyLanguage();
+  const select = h.node('#precisionSelect');
+  const options = [...select.options];
+  for (const labels of [
+    ['Auto', '3 significant digits', '4 significant digits', '6 significant digits'],
+    ['自動', '3桁', '4桁', '6桁'],
+    ['Auto', '3 significant digits', '4 significant digits', '6 significant digits']
+  ]) {
+    assert.deepEqual([...select.options].map(option => option.textContent), labels);
+    assert.deepEqual([...select.options].map(option => option.getAttribute('value')), ['auto', '3', '4', '6']);
+    assert.equal(select.value, '4');
+    assert.deepEqual([...select.options], options);
+    h.node('#languageButton').click();
+  }
+});

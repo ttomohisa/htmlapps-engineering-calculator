@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4 - 2026-10-11
+
+- Keep the background stationary while native Help or Settings is open.
+- Localize the three numeric significant-digit options in English while retaining their values and current selection.
+- Keep the Help header and Close button visible while its body scrolls at short heights.
+- Preserve existing controls and the local-processing shield; update bilingual guidance and source/generated regression contracts.
+
 ## 1.0.3 - 2026-10-09
 
 - Replace the header icon and favicon with the supplied rounded green SVG artwork, preserving the existing responsive icon dimensions.

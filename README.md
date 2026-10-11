@@ -8,6 +8,8 @@
 
 A privacy-focused, single-HTML engineering calculator for common mechanical design, manufacturing, fluid, thermal, electrical, tolerance, and unit-conversion work.
 
+Help and Settings keep background scrolling locked while open. Help keeps its heading and Close button visible while its body scrolls. Use Close, Escape, or the backdrop to dismiss.
+
 ## 🚀 Live demo
 
 ### [Open Engineering Calculator on GitHub Pages](https://ttomohisa.github.io/htmlapps-engineering-calculator/)
