@@ -8,6 +8,8 @@
 
 機械設計・製造・流体・熱・電気・公差・単位換算でよく使う技術計算を、ひとつにまとめた完全ローカル処理の単一HTMLツールです。
 
+ヘルプ・表示設定を開いている間は背景のスクロールを止めます。ヘルプは見出しと閉じるボタンを残して本文だけスクロールでき、閉じる・Esc・背景クリックで閉じられます。
+
 ## 🚀 デモ
 
 ### [GitHub Pages で Engineering Calculator を開く](https://ttomohisa.github.io/htmlapps-engineering-calculator/)
