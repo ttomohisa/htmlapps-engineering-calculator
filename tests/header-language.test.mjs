@@ -12,6 +12,7 @@ for (const initial of ['ja', 'en']) test(`${initial}: header uses the target cod
     assert.equal(button.textContent, language === 'ja' ? 'EN' : 'JA');
     assert.equal(button.getAttribute('aria-label'), target);
     assert.equal(button.title, target);
+    assert.equal(h.node('#brandMeta').textContent, language === 'ja' ? '単一HTML・完全ローカル処理・技術計算' : 'Single HTML · Fully local processing · Engineering tools');
     assert.equal(h.node('#localBadge').textContent, language === 'ja' ? '完全ローカル処理' : 'Fully local processing');
     assert.equal(h.node('#helpButton').title, language === 'ja' ? '使い方と注意事項' : 'How to use & notes');
     h.node('#languageButton').click();

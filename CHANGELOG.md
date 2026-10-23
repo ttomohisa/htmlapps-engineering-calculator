@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Hide the informational footer at the existing 680px smartphone breakpoint; retain mobile navigation.
+
+- Standardize the equivalent English local-processing label without changing application behavior or existing responsive Help layout.
+
 ## 1.0.4 - 2026-10-11
 
 - Keep the background stationary while native Help or Settings is open.
