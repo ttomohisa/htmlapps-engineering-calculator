@@ -35,3 +35,7 @@ test('Help allocates scroll to its body while the header stays fixed', () => {
   assert.match(css, /#helpDialog\s+\.dialog-head\s*\{[^}]*flex:\s*0\s+0\s+auto/);
   assert.match(css, /#helpDialog\s+\.dialog-body\s*\{[^}]*min-height:\s*0;[^}]*overflow-y:\s*auto/);
 });
+
+test('informational footer hides at existing smartphone breakpoint',()=>{
+  assert.match(css,/@media\(max-width:680px\)\{footer\{display:none\}/);
+});

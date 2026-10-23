@@ -131,3 +131,5 @@ Current stable Chromium, Firefox, and Safari on desktop and smartphone. Direct `
 v1.0.0 is the first public release. It consolidates the staged pre-release development work into one release: the 80-calculator registry, material/section/fit/bolt helpers, gear/spring/bearing/fluid/thermal expansions, parameter sweeps and SVG graphs, plus the final usability and safety polish.
 
 - Equivalent English local-processing labels use “Fully local processing”; existing mobile footer/build-info behavior is preserved.
+
+- Hide the informational page footer at the existing 680px smartphone breakpoint, while keeping functional navigation unchanged.
