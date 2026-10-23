@@ -9,7 +9,7 @@ async function main() {
   fs.mkdirSync(evidence, { recursive: true });
   const browser = await chromium.launch();
   try {
-    for (const language of ['ja', 'en']) for (const [width, height] of [[1360,900],[320,568],[393,252]]) {
+    for (const language of ['ja', 'en']) for (const [width, height] of [[1360,900],[681,568],[680,568],[320,568],[393,252]]) {
       const context = await browser.newContext({ viewport: {width,height}, locale: language, reducedMotion:'reduce' });
       const page = await context.newPage();
       const errors=[], requests=[];
@@ -27,7 +27,7 @@ async function main() {
         if(width > 680) assert.ok(await badge.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.parentElement.getBoundingClientRect();return r.left>=p.left&&r.right<=p.right+1;}), label+': badge not clipped');
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),label+': page width');
         assert.equal(await page.locator('footer').isVisible(),width > 680,'Existing footer behavior preserved.');
-        if(width!==393) await page.screenshot({path:path.join(evidence,label+'.png')});
+        if([1360,320].includes(width)) await page.screenshot({path:path.join(evidence,label+'.png')});
         await page.locator('#helpButton').click();
         const body=page.locator('#helpBody');
         await body.evaluate(el=>{el.scrollTop=el.scrollHeight;});
