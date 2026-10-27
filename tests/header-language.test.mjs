@@ -15,6 +15,7 @@ for (const initial of ['ja', 'en']) test(`${initial}: header uses the target cod
     assert.equal(h.node('#brandMeta').textContent, language === 'ja' ? '単一HTML・完全ローカル処理・技術計算' : 'Single HTML · Fully local processing · Engineering tools');
     assert.equal(h.node('#localBadge').textContent, language === 'ja' ? '完全ローカル処理' : 'Fully local processing');
     assert.equal(h.node('#helpButton').title, language === 'ja' ? '使い方と注意事項' : 'How to use & notes');
+    assert.match(h.node('#helpBody').textContent, language === 'ja' ? /簡易計算.*入力.*残り/ : /quick-expression input.*error message/i, 'Help preserves quick-expression input/error guidance');
     h.node('#languageButton').click();
   }
 });

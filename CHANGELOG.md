@@ -8,6 +8,8 @@
 
 ## Unreleased
 
+- Preserve explicit English Help guidance about quick-expression input and translated error messages when applying the common UI language rules.
+
 - Hide the informational footer at the existing 680px smartphone breakpoint; retain mobile navigation.
 
 - Standardize the equivalent English local-processing label without changing application behavior or existing responsive Help layout.
