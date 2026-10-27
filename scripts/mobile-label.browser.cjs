@@ -9,7 +9,7 @@ async function main() {
   fs.mkdirSync(evidence, { recursive: true });
   const browser = await chromium.launch();
   try {
-    for (const language of ['ja', 'en']) for (const [width, height] of [[1360,900],[681,568],[680,568],[320,568],[393,252]]) {
+    for (const language of ['ja', 'en']) for (const [width, height] of [[1360,900],[681,568],[680,568],[320,568], [360,640], [390,844],[393,252]]) {
       const context = await browser.newContext({ viewport: {width,height}, locale: language, reducedMotion:'reduce' });
       const page = await context.newPage();
       const errors=[], requests=[];
@@ -29,6 +29,10 @@ async function main() {
         assert.equal(await page.locator('footer').isVisible(),width > 680,'Existing footer behavior preserved.');
         if([1360,320].includes(width)) await page.screenshot({path:path.join(evidence,label+'.png')});
         await page.locator('#helpButton').click();
+        const visibleHelpText = await page.locator('#helpDialog').innerText();
+        assert.doesNotMatch(visibleHelpText, /(?:EN\s*\/\s*JA|JA\s*[\/／]\s*EN|ヘッダーのEN|Use EN in the header)/, label + ': redundant language instructions removed');
+        assert.match(visibleHelpText, language === 'ja' ? /簡易計算.*入力.*残り/ : /quick-expression input.*error message/i, label + ': useful adjacent Help guidance retained');
+
         const body=page.locator('#helpBody');
         await body.evaluate(el=>{el.scrollTop=el.scrollHeight;});
         const helpEnd = await page.locator('#helpBody .build-info .build-item:last-child strong').evaluate(el=>{const r=el.getBoundingClientRect(),body=el.closest("#helpBody").getBoundingClientRect(),dialog=el.closest('dialog').getBoundingClientRect();return {top:r.top,bottom:r.bottom,clipTop:Math.max(0,body.top,dialog.top),clipBottom:Math.min(innerHeight,body.bottom,dialog.bottom)};});
