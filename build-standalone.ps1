@@ -293,6 +293,8 @@ $manifest = [ordered]@{
 
 Write-Step "Generating standalone HTML"
 $template = [System.IO.File]::ReadAllText($TemplatePath, [System.Text.Encoding]::UTF8)
+. (Join-Path $Root "scripts/embed-ui-conventions.ps1")
+$template = Expand-BrowserKittyUI -Template $template -ComponentsPath (Join-Path $Root "components")
 $assetBundleJson = ConvertTo-SafeJson $assetBundle 50
 $replacements = [ordered]@{
   "__APP_CONFIG_JSON__" = ConvertTo-SafeJson $appConfig 20
@@ -309,6 +311,13 @@ foreach ($entry in $replacements.GetEnumerator()) {
 $outputDirectory = Split-Path -Parent $OutputPath
 New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
 [System.IO.File]::WriteAllText($OutputPath, $template, (New-Object System.Text.UTF8Encoding($false)))
+
+# Keep the public downloadable alias on the same generated source as dist.
+if (-not $OutputPathWasSpecified) {
+  $publicAlias = Join-Path $Root ([string]$appConfig.slug + ".html")
+  [System.IO.File]::WriteAllBytes($publicAlias, [System.IO.File]::ReadAllBytes($OutputPath))
+}
+
 [System.IO.File]::WriteAllText((Join-Path $outputDirectory "dependency-manifest.json"), ($manifest | ConvertTo-Json -Depth 40), (New-Object System.Text.UTF8Encoding($false)))
 [System.IO.File]::WriteAllText((Join-Path $outputDirectory ".nojekyll"), "", (New-Object System.Text.UTF8Encoding($false)))
 

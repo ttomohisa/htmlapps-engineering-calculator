@@ -166,3 +166,7 @@ Bug reports and feature proposals are welcome through GitHub Issues. See [CONTRI
 Copyright © 2026 ttomohisa
 
 Licensed under the [MIT License](LICENSE).
+
+### Save, language and reset feedback
+
+Inputs and preferences autosave in this browser, with persistent failure guidance and Retry. TXT notes contain the current calculation and are not editable project backups. The shared Japanese/English choice preserves current input and filename drafts. Reset Undo expires after later edits and pauses while its action has keyboard focus.

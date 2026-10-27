@@ -58,3 +58,7 @@ Initial public release.
 - Added standalone readable and self-extracting single-HTML builds with zero third-party runtime dependencies and `connect-src 'none'`.
 - Added release documentation for formulas, limitations, privacy, architecture, GitHub Pages deployment, and contribution/security guidance.
 - Fixed repository validation so it checks Engineering Calculator behavior instead of requiring the base template's unused text-output filename field.
+
+## Unreleased
+
+- Unify autosave recovery, shared language, copy action states, persistent export failures and scoped reset Undo. Preserve calculation formulas, file formats and existing data keys.

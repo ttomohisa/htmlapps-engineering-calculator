@@ -133,3 +133,7 @@ v1.0.0 is the first public release. It consolidates the staged pre-release devel
 - Equivalent English local-processing labels use “Fully local processing”; existing mobile build-info behavior is preserved.
 
 - Hide the informational page footer at the existing 680px smartphone breakpoint, while keeping functional navigation unchanged.
+
+## Shared UI conventions
+
+Fixed Browser Kitty UI 1.0.0 is embedded at build time with exact JS/CSS pins. Existing calculation registry, storage keys/schema, condition-link payload and TXT formulas/values remain unchanged. Save status follows real writes, preserving per-key failures until retry succeeds; unreadable storage requires scoped Cancel-first confirmation before replacement. Language follows valid URL, common preference, JSON legacy preference, supported browser languages, then English; explicit changes alone write the common preference. Current inputs, filename drafts, disclosure state and pending copy snapshots survive language changes. Clipboard operations reject overlapping calls. Reset Undo cannot overwrite later edits and pauses during keyboard focus. Export failures persist in the corresponding status area. Native file/browser, narrow/mobile layouts, keyboard/focus and clipboard acceptance remain manual where policy blocks browser execution.

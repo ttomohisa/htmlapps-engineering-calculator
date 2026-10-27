@@ -111,3 +111,5 @@ Keep source in one HTML while it remains understandable. When an app grows subst
 - No runtime external resource.
 - Clear state ownership.
 - A build that fails on missing input.
+
+The default build also generates the public `engineering-calculator.html` alias from the same bytes as the readable release. The fixed UI JS/CSS are SHA-256 checked before build-time embedding; `.gitattributes` pins their LF bytes in fresh Windows checkouts. Release tests parse the combined native scripts and check the readable, decoded and public-root artifacts against the pinned components.
